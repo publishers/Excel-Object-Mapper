@@ -80,7 +80,7 @@ public class DefaultExcelDataExtractor implements ExcelTypeHelper {
             try {
                 dateValue = cell.getDateCellValue();
             } catch (IllegalStateException ex) {
-                throw new ValidationException(ex, "Invalid excel file. Cannot be transform to Date. Cell: " + cellNumber
+                throw new ValidationException(ex, "Invalid com.excel file. Cannot be transform to Date. Cell: " + cellNumber
                         + " raw: " + row.getRowNum());
             }
             Instant instant = dateValue.toInstant();
@@ -92,7 +92,7 @@ public class DefaultExcelDataExtractor implements ExcelTypeHelper {
     private XSSFCell getCell(XSSFRow row, int cellNumber) {
         XSSFCell cell = row.getCell(cellNumber);
         if (cell == null) {
-            throw new ValidationException("Invalid excel file. Cell is null. Cell: " + cellNumber
+            throw new ValidationException("Invalid com.excel file. Cell is null. Cell: " + cellNumber
                     + " raw: " + row.getRowNum());
         }
         return validateCellValue(cell);
@@ -100,7 +100,7 @@ public class DefaultExcelDataExtractor implements ExcelTypeHelper {
 
     private XSSFCell validateCellValue(XSSFCell cell) {
         if (StringUtils.isEmpty(cell.getRawValue())) {
-            throw new ValidationException("Invalid excel file. Cell value cannot be null. Cell: " + cell.getColumnIndex()
+            throw new ValidationException("Invalid com.excel file. Cell value cannot be null. Cell: " + cell.getColumnIndex()
                     + " raw: " + cell.getRowIndex());
         }
         return cell;

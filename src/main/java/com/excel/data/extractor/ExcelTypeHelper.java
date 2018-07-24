@@ -7,7 +7,7 @@ public interface ExcelTypeHelper {
      * Extracts exactly from row
      *
      * @param tClass - returned type
-     * @param row  - current row in excel
+     * @param row  - current row in com.excel
      * @param columnNumber
      * @return type from parametrized class
      */
