@@ -1,4 +1,4 @@
-package com.excel.mapper;
+package com.excel.data.extractor;
 
 import org.apache.poi.xssf.usermodel.XSSFRow;
 

@@ -1,4 +1,4 @@
-package com.excel.mapper;
+package com.excel.data.extractor;
 
 import com.excel.mapper.exception.UnsupportedDataExtractorException;
 import com.excel.mapper.exception.ValidationException;
