@@ -114,31 +114,39 @@ public class ExcelObjectMapper<T> implements FileUploader<List<T>> {
             field.setAccessible(true);
             Annotation[] annotations = field.getDeclaredAnnotations();
             Header header = findAnnotation(annotations, Header.class);
-            if (header != null) {
-                Object value = typeHelper.extract(field.getType(), row, header.position());
-                try {
-                    field.set(obj, value);
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-            }
-            NextSheet nextSheet = findAnnotation(annotations, NextSheet.class);
-            if (nextSheet != null) {
-                try {
-                    Class fieldType = extractFieldType(field);
-                    if (!sheetsMap.containsKey(fieldType)) {
-                        List<?> newSheetResult = extractSheet(fieldType);
-                        if (!newSheetResult.isEmpty()) {
-                            sheetsMap.put(fieldType, FieldObjectDataContainer.builder()
-                                    .field(field)
-                                    .fieldParams((List<Object>) newSheetResult)
-                                    .build());
-                        }
-                    }
+            headerHandler(header, field, row, obj);
 
-                } catch (Exception e) {
-                    e.printStackTrace();
+            NextSheet nextSheet = findAnnotation(annotations, NextSheet.class);
+            nextSheetHandler(nextSheet, field);
+        }
+    }
+
+    private <E> void headerHandler(Header header, Field field, XSSFRow row, E obj) {
+        if (header != null) {
+            Object value = typeHelper.extract(field.getType(), row, header.position());
+            try {
+                field.set(obj, value);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void nextSheetHandler(NextSheet nextSheet, Field field) {
+        if (nextSheet != null) {
+            try {
+                Class fieldType = extractFieldType(field);
+                if (!sheetsMap.containsKey(fieldType)) {
+                    List<?> newSheetResult = extractSheet(fieldType);
+                    if (!newSheetResult.isEmpty()) {
+                        sheetsMap.put(fieldType, FieldObjectDataContainer.builder()
+                                .field(field)
+                                .fieldParams((List<Object>) newSheetResult)
+                                .build());
+                    }
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
