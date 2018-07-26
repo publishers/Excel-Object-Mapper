@@ -26,12 +26,7 @@ public abstract class AbstractFileUploader<T, D> implements ExcelFileUploader<T>
     @Override
     public List<T> extractData(InputStream inputStream) throws IOException {
         XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
-        List<T> currentDataSheet = extractData(workbook);
-        if(fileUploader != null) {
-            List<D> nextDataSheet = fileUploader.extractData(workbook);
-            currentDataSheet = mergeDataSheets(currentDataSheet, nextDataSheet);
-        }
-        return currentDataSheet;
+        return extractData(workbook);
     }
 
     protected List<T> mergeDataSheets(List<T> currentDataSheet, List<D> sheetData) {
@@ -52,13 +47,21 @@ public abstract class AbstractFileUploader<T, D> implements ExcelFileUploader<T>
                 }
             }
         }
+        return extractNextSheet(dataList, workbook);
+    }
+
+    private List<T> extractNextSheet(List<T> dataList, XSSFWorkbook workbook) {
+        if(fileUploader != null) {
+            List<D> nextDataSheet = fileUploader.extractData(workbook);
+            dataList = mergeDataSheets(dataList, nextDataSheet);
+        }
         return dataList;
     }
 
-    abstract int getSheetPage();
+    protected abstract int getSheetPage();
 
     protected abstract T extractRow(XSSFRow row);
 
-    abstract boolean isValidHeaders(XSSFRow headerRow);
+    protected abstract boolean isValidHeaders(XSSFRow headerRow);
 }
 

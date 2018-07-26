@@ -58,4 +58,36 @@ public class PortfolioRow {
     public List<AssetRow> getAssetRows() {
         return assetRows;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
+
+    public void setStartDate(LocalDateTime startDate) {
+        this.startDate = startDate;
+    }
+
+    public void setStartingBalance(BigDecimal startingBalance) {
+        this.startingBalance = startingBalance;
+    }
+
+    public void setInvestmentPeriod(BigDecimal investmentPeriod) {
+        this.investmentPeriod = investmentPeriod;
+    }
+
+    public void setInvestmentGoal(BigDecimal investmentGoal) {
+        this.investmentGoal = investmentGoal;
+    }
+
+    public void setMonthlyDeposit(BigDecimal monthlyDeposit) {
+        this.monthlyDeposit = monthlyDeposit;
+    }
+
+    public void setAssetRows(List<AssetRow> assetRows) {
+        this.assetRows = assetRows;
+    }
 }

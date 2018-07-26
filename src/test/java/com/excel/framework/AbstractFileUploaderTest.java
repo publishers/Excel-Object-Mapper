@@ -1,8 +1,10 @@
-package com.excel.mapper;
+package com.excel.framework;
 
-import com.excel.test.FirstSheetObject;
+import com.excel.framework.impl.AssetFileUploader;
+import com.excel.framework.impl.PortfolioFileUploader;
+import com.excel.framework.impl.TestSheetFileUploader;
+import com.excel.test.AssetRow;
 import com.excel.test.PortfolioRow;
-import com.excel.test.SecondSheetObject;
 import com.excel.test.TestSheet;
 import org.junit.Test;
 
@@ -14,28 +16,20 @@ import java.util.List;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
-public class ExcelObjectMapperTest {
-    public static final String FILE_TEST_NAME = "testMapperObjects.xlsx";
+public class AbstractFileUploaderTest {
+    public static final String FILE_TEST_NAME = "portfolio-upload.xlsx";
 
     @Test
-    public void testObjectMapper() throws Exception {
+    public void test() throws Exception {
+        TestSheetFileUploader sheetFileUploader = new TestSheetFileUploader();
+        AssetFileUploader assetFileUploader = new AssetFileUploader(sheetFileUploader);
+        PortfolioFileUploader portfolioFileUploader = new PortfolioFileUploader(assetFileUploader);
+
         URL url = getClass().getClassLoader().getResource(FILE_TEST_NAME);
-        List<FirstSheetObject> result =
-                new ExcelObjectMapper<>(FirstSheetObject.class).extractData(url.openStream());
-        FirstSheetObject firstSheetObject = result.get(0);
-        assertThat(firstSheetObject.getFieldA(), is("test value 1"));
-        assertThat(firstSheetObject.getFieldB(), is("test2.1"));
-        SecondSheetObject secondSheetObject = firstSheetObject.getSecondSheetObject().get(0);
-        assertThat(secondSheetObject.getFieldC(), is("test value 1"));
-        assertThat(secondSheetObject.getFieldD(), is("test value 2"));
-    }
 
-    @Test
-    public void testObjectMapper2() throws Exception {
-        URL url = getClass().getClassLoader().getResource("portfolio-upload.xlsx");
-        List<PortfolioRow> portfolioRows =
-                new ExcelObjectMapper<>(PortfolioRow.class).extractData(url.openStream());
-        PortfolioRow portfolioRow = portfolioRows.get(1);
+        List<PortfolioRow> result = portfolioFileUploader.extractData(url.openStream());
+
+        PortfolioRow portfolioRow = result.get(1);
         assertThat(portfolioRow.getName(), is("portfolio 12"));
         assertThat(portfolioRow.getCurrency(), is("EUR"));
         assertThat(portfolioRow.getStartDate(), is(LocalDateTime.of(2018,04, 28, 0, 0)));
@@ -50,5 +44,9 @@ public class ExcelObjectMapperTest {
             TestSheet testSheet = assetRow.getTestSheet().get(0);
             assertThat(testSheet.getPortfolioName(), is(portfolioRow.getName()));
         });
+
+
+
+
     }
 }
